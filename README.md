@@ -14,7 +14,7 @@ This is a simple web application that allows users to search and explore recipes
 ## API
 
 The application uses TheMealDB API:
-https://www.themealdb.com/api/json/v1/1/
+[https://www.themealdb.com/api/json/v1/1/](https://www.themealdb.com/api/json/v1/1/search.php?f=a)
 
 ## Student Details
 
