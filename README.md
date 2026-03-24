@@ -1,17 +1,17 @@
 # Recipe-Finder-App
 Search and explore recipes easily
 
-Overview
+## Description
+This is a simple web application that allows users to search and explore recipes. It uses real-time data from TheMealDB API and focuses on basic JavaScript concepts like API integration and DOM manipulation.
 
-This is a simple web app where users can search and explore recipes. It uses real-time data from TheMealDB API and focuses on basic JavaScript concepts like API calls, array methods, and DOM updates.
+## Features
 
-Features
+* Search recipes by name
+* Filter recipes by category
+* Sort recipes in ascending or descending order
+* Add favorites using local storage
 
-Search recipes by name,
-Filter recipes by category,
-Sort recipes (A–Z / Z–A),
-Save favorites using local storage,
-API
+## API
 
-The app uses TheMealDB API:
+The application uses TheMealDB API:
 https://www.themealdb.com/api/json/v1/1/
