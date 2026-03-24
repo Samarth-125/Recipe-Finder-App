@@ -18,5 +18,5 @@ https://www.themealdb.com/api/json/v1/1/
 
 ## Student Details
 
-Name: Samarth
+Name: Samarth<br>
 Roll Number: 2501010400
