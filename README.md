@@ -1,4 +1,4 @@
-# Recipe-Finder-App
+# Recipe Finder App
 Search and explore recipes easily
 
 ## Description
