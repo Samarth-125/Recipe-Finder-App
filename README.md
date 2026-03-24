@@ -15,3 +15,8 @@ This is a simple web application that allows users to search and explore recipes
 
 The application uses TheMealDB API:
 https://www.themealdb.com/api/json/v1/1/
+
+## Student Details
+
+Name: Samarth
+Roll Number: 2501010400
