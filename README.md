@@ -7,10 +7,10 @@ This is a simple web app where users can search and explore recipes. It uses rea
 
 Features
 
-Search recipes by name
-Filter recipes by category
-Sort recipes (A–Z / Z–A)
-Save favorites using local storage
+Search recipes by name,
+Filter recipes by category,
+Sort recipes (A–Z / Z–A),
+Save favorites using local storage,
 API
 
 The app uses TheMealDB API:
