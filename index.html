@@ -1,15 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Recipe App</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meals</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1 id="main-topic">Meals</h1>
-    <div id="loading">Fetching delicious meals...</div>
-    <div id="container"></div>
+
+    <h1 class="main-topic">MEALS</h1>
+
+    <input type="text" id="search" placeholder="Search meals..." />
+
+    <select id="sort">
+        <option value="">Sort</option>
+        <option value="az">A-Z</option>
+        <option value="za">Z-A</option>
+    </select>
+
+    <div id="app">Fetching delicious meals...</div>
     <script src="script.js"></script>
+
 </body>
 </html>
