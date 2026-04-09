@@ -3,23 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meals</title>
-
+    <title>Recipe Finder</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1 class="main-topic">MEALS</h1>
+    <header>
+        <h1>🍽️ Recipe Finder</h1>
+        <button id="theme-toggle">🌙 Dark Mode</button>
+    </header>
 
-    <input type="text" id="search" placeholder="Search meals..." />
+    <div class="controls">
+        <input type="text" id="search" placeholder="Search meals..." />
 
-    <select id="sort">
-        <option value="">Sort</option>
-        <option value="az">A-Z</option>
-        <option value="za">Z-A</option>
-    </select>
+        <select id="category-filter">
+            <option value="">All Categories</option>
+        </select>
 
-    <div id="app">Fetching delicious meals...</div>
+        <select id="sort">
+            <option value="">Sort</option>
+            <option value="az">A–Z</option>
+            <option value="za">Z–A</option>
+        </select>
+    </div>
+
+    <p id="status-message">Fetching recipes from A–Z...</p>
+
+    <div id="app"></div>
+
     <script src="script.js"></script>
 
 </body>
