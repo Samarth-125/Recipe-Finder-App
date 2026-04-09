@@ -50,5 +50,5 @@ The `?f=` parameter returns meals starting with that letter. The app loops throu
 
 ## Student Details
 
-**Name:** Samarth
+**Name:** Samarth<br>
 **Roll Number:** 2501010400
