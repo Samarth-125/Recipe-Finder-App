@@ -33,6 +33,10 @@ The `?f=` parameter returns meals starting with that letter. The app loops throu
 - TheMealDB API
 - Local Storage (for favourites and theme)
 
+## Live Demo
+ 
+🔗 [View Deployed App]((https://github.com/Samarth-125/Recipe-Finder-App.git))
+
 ## How to Run
 
 1. Clone or download this repository
