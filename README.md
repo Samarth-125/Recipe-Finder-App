@@ -35,7 +35,7 @@ The `?f=` parameter returns meals starting with that letter. The app loops throu
 
 ## Live Demo
  
-🔗 [View Deployed App](https://github.com/Samarth-125/Recipe-Finder-App.git)
+🔗 [View Deployed App](https://recipe-finder-app-nine.vercel.app)
 
 ## How to Run
 
