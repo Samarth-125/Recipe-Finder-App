@@ -1,39 +1,31 @@
-// ── DOM Elements ──
-const app            = document.getElementById("app");
-const searchInput    = document.getElementById("search");
+const app = document.getElementById("app");
+const searchInput = document.getElementById("search");
 const categoryFilter = document.getElementById("category-filter");
-const sortSelect     = document.getElementById("sort");
-const themeToggle    = document.getElementById("theme-toggle");
-const statusMessage  = document.getElementById("status-message");
-const spinner        = document.getElementById("spinner");
+const sortSelect = document.getElementById("sort");
+const themeToggle = document.getElementById("theme-toggle");
+const statusMessage = document.getElementById("status-message");
+const spinner = document.getElementById("spinner");
 
-// ── State ──
-let allMeals   = [];
+let allMeals = [];
 let favourites = JSON.parse(localStorage.getItem("favourites")) || [];
 
+function showSpinner() {
+    if (spinner) spinner.classList.add("visible");
+    app.innerHTML = "";
+}
 
-// ── Utilities ──
+function hideSpinner() {
+    if (spinner) spinner.classList.remove("visible");
+}
+
 function debounce(fn, delay) {
     let timer;
-    return function (...args) {
+    return (...args) => {
         clearTimeout(timer);
         timer = setTimeout(() => fn(...args), delay);
     };
 }
 
-function showSpinner() {
-    spinner.classList.add("visible");
-    app.innerHTML = "";
-}
-
-function hideSpinner() {
-    spinner.classList.remove("visible");
-}
-
-
-// ── Fetch All Meals (A–Z) ──
-// The API endpoint ?f=a only returns meals starting with "a".
-// To get all meals, we loop through every letter and combine the results.
 async function fetchAllMeals() {
     const letters = "abcdefghijklmnopqrstuvwxyz".split("");
 
@@ -41,20 +33,15 @@ async function fetchAllMeals() {
         fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`)
             .then(res => res.json())
             .then(data => data.meals || [])
-            .catch(() => [])   // if one letter fails, skip it
+            .catch(() => [])
     );
 
     const results = await Promise.all(requests);
-
-    // flatMap combines the array of arrays into one flat array
-    allMeals = results.flatMap(meals => meals);
+    allMeals = results.flat();
 }
 
-
-// ── Populate Category Dropdown ──
 function populateCategories() {
-    // Use map to extract categories, then Set to remove duplicates
-    const categories = [...new Set(allMeals.map(meal => meal.strCategory))].sort();
+    const categories = [...new Set(allMeals.map(m => m.strCategory))].sort();
 
     categories.forEach(cat => {
         const option = document.createElement("option");
@@ -64,68 +51,51 @@ function populateCategories() {
     });
 }
 
-
-// ── Render Meal Cards ──
 function display(meals) {
-    if (meals.length === 0) {
-        app.innerHTML = `<p class="no-results">No meals found. Try a different search.</p>`;
+    if (!meals.length) {
+        app.innerHTML = `<p class="no-results">No meals found</p>`;
         return;
     }
 
-    app.innerHTML = meals.map(meal => {
-        const isFav = favourites.includes(meal.idMeal);
-
-        return `
-            <div class="card" onclick="showDetail('${meal.idMeal}')">
-                <img src="${meal.strMealThumb}" alt="${meal.strMeal}" loading="lazy" />
-                <div class="card-body">
-                    <h3>${meal.strMeal}</h3>
-                    <p class="category">${meal.strCategory}</p>
-                    <button
-                        class="fav-btn ${isFav ? "active" : ""}"
-                        onclick="event.stopPropagation(); toggleFavourite('${meal.idMeal}', this)"
-                    >
-                        ${isFav ? "❤️ Saved" : "🤍 Favourite"}
-                    </button>
-                </div>
+    app.innerHTML = meals.map(meal => `
+        <div class="card" data-id="${meal.idMeal}">
+            <img src="${meal.strMealThumb}" />
+            <div class="card-body">
+                <h3>${meal.strMeal}</h3>
+                <p class="category">${meal.strCategory}</p>
+                <button class="fav-btn ${favourites.includes(meal.idMeal) ? "active" : ""}" data-id="${meal.idMeal}">
+                    ${favourites.includes(meal.idMeal) ? "❤️ Saved" : "🤍 Favourite"}
+                </button>
             </div>
-        `;
-    }).join("");
+        </div>
+    `).join("");
 }
 
-
-// ── Filter + Sort + Search (all using HOFs) ──
 function applyFilters() {
-    const query    = searchInput.value.toLowerCase().trim();
+    const query = searchInput.value.toLowerCase().trim();
     const category = categoryFilter.value;
-    const sortBy   = sortSelect.value;
+    const sortBy = sortSelect.value;
 
     let result = allMeals
-        .filter(meal => meal.strMeal.toLowerCase().includes(query))
-        .filter(meal => category === "" || meal.strCategory === category)
+        .filter(m => m.strMeal.toLowerCase().includes(query))
+        .filter(m => !category || m.strCategory === category)
         .sort((a, b) => {
             if (sortBy === "az") return a.strMeal.localeCompare(b.strMeal);
             if (sortBy === "za") return b.strMeal.localeCompare(a.strMeal);
             return 0;
         });
 
-    statusMessage.textContent = `Showing ${result.length} meal${result.length !== 1 ? "s" : ""}`;
+    statusMessage.textContent = `Showing ${result.length} meals`;
     display(result);
 }
 
-
-// ── Favourites (Local Storage) ──
-function toggleFavourite(mealId, btn) {
-    const alreadySaved = favourites.includes(mealId);
-
-    if (alreadySaved) {
-        // Remove from favourites
-        favourites = favourites.filter(id => id !== mealId);
+function toggleFavourite(id, btn) {
+    if (favourites.includes(id)) {
+        favourites = favourites.filter(x => x !== id);
         btn.textContent = "🤍 Favourite";
         btn.classList.remove("active");
     } else {
-        // Add to favourites
-        favourites.push(mealId);
+        favourites.push(id);
         btn.textContent = "❤️ Saved";
         btn.classList.add("active");
     }
@@ -133,105 +103,72 @@ function toggleFavourite(mealId, btn) {
     localStorage.setItem("favourites", JSON.stringify(favourites));
 }
 
-
-// ── Dark / Light Mode Toggle ──
 function initTheme() {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
+    const saved = localStorage.getItem("theme");
+
+    if (saved === "dark") {
         document.body.classList.add("dark");
         themeToggle.textContent = "☀️ Light Mode";
+    } else {
+        themeToggle.textContent = "🌙 Dark Mode";
     }
 }
 
 themeToggle.addEventListener("click", () => {
     document.body.classList.toggle("dark");
-    const isDark = document.body.classList.contains("dark");
-    themeToggle.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
-    localStorage.setItem("theme", isDark ? "dark" : "light");
+
+    const dark = document.body.classList.contains("dark");
+    themeToggle.textContent = dark ? "☀️ Light Mode" : "🌙 Dark Mode";
+
+    localStorage.setItem("theme", dark ? "dark" : "light");
 });
 
-
-// ── Event Listeners ──
 searchInput.addEventListener("input", debounce(applyFilters, 300));
 categoryFilter.addEventListener("change", applyFilters);
 sortSelect.addEventListener("change", applyFilters);
 
+app.addEventListener("click", e => {
+    const card = e.target.closest(".card");
+    const btn = e.target.closest(".fav-btn");
 
-// ── Meal Detail View ──
-async function showDetail(mealId) {
-    const controls      = document.querySelector(".controls");
-    const statusMessage = document.getElementById("status-message");
+    if (btn) {
+        toggleFavourite(btn.dataset.id, btn);
+        return;
+    }
 
-    controls.style.display      = "none";
-    statusMessage.style.display = "none";
+    if (card) {
+        showDetail(card.dataset.id);
+    }
+});
+
+async function showDetail(id) {
     showSpinner();
 
-    try {
-        const res  = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`);
-        const data = await res.json();
-        const meal = data.meals[0];
+    const res = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+    const data = await res.json();
+    const meal = data.meals[0];
 
-        const ingredients = Array.from({ length: 20 }, (_, i) => {
-            const ingredient = meal[`strIngredient${i + 1}`];
-            const measure    = meal[`strMeasure${i + 1}`];
-            return ingredient && ingredient.trim()
-                ? `<li>${measure ? measure.trim() + " " : ""}${ingredient.trim()}</li>`
-                : null;
-        }).filter(Boolean).join("");
+    hideSpinner();
 
-        hideSpinner();
-
-        app.innerHTML = `
-            <div class="detail-page">
-                <button class="back-btn" onclick="goBack()">← Back</button>
-                <div class="detail-content">
-                    <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="detail-img" />
-                    <div class="detail-info">
-                        <h2>${meal.strMeal}</h2>
-                        <p class="detail-meta">${meal.strCategory} · ${meal.strArea}</p>
-
-                        <h3>Ingredients</h3>
-                        <ul class="ingredient-list">${ingredients}</ul>
-
-                        <h3>Instructions</h3>
-                        <p class="instructions">${meal.strInstructions}</p>
-
-                        ${meal.strYoutube ? `<a class="yt-link" href="${meal.strYoutube}" target="_blank">▶ Watch on YouTube</a>` : ""}
-                    </div>
-                </div>
-            </div>
-        `;
-    } catch (error) {
-        hideSpinner();
-        app.innerHTML = `<p class="no-results">Could not load recipe. Please try again.</p>`;
-    }
+    app.innerHTML = `
+        <div class="detail-page">
+            <button onclick="init()">← Back</button>
+            <h2>${meal.strMeal}</h2>
+            <img src="${meal.strMealThumb}" class="detail-img"/>
+            <p>${meal.strInstructions}</p>
+        </div>
+    `;
 }
 
-function goBack() {
-    const controls      = document.querySelector(".controls");
-    const statusMessage = document.getElementById("status-message");
-
-    controls.style.display      = "flex";
-    statusMessage.style.display = "block";
-    applyFilters();
-}
-
-
-// ── Initialise App ──
 async function init() {
-    statusMessage.textContent = "Fetching recipes from A–Z...";
+    statusMessage.textContent = "Fetching recipes... this may take a few seconds";
     showSpinner();
 
-    try {
-        await fetchAllMeals();
-        hideSpinner();
-        populateCategories();
-        applyFilters();
-    } catch (error) {
-        hideSpinner();
-        app.innerHTML = `<p class="no-results">Something went wrong. Please refresh the page.</p>`;
-        statusMessage.textContent = "";
-    }
+    await fetchAllMeals();
+
+    hideSpinner();
+    populateCategories();
+    applyFilters();
 }
 
 initTheme();

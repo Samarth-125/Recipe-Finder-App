@@ -1,37 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Finder</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipe Finder</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <h1>🍽️ Recipe Finder</h1>
-        <button id="theme-toggle">🌙 Dark Mode</button>
-    </header>
+<header>
+  <h1>🍽️ Recipe Finder</h1>
+  <button id="theme-toggle">🌙 Dark Mode</button>
+</header>
 
-    <div class="controls">
-        <input type="text" id="search" placeholder="Search meals..." />
+<div class="controls">
+  <input id="search" placeholder="Search meals..." />
+  <select id="category-filter">
+    <option value="">All Categories</option>
+  </select>
+  <select id="sort">
+    <option value="">Sort</option>
+    <option value="az">A–Z</option>
+    <option value="za">Z–A</option>
+  </select>
+</div>
 
-        <select id="category-filter">
-            <option value="">All Categories</option>
-        </select>
+<p id="status-message"></p>
 
-        <select id="sort">
-            <option value="">Sort</option>
-            <option value="az">A–Z</option>
-            <option value="za">Z–A</option>
-        </select>
-    </div>
+<div id="spinner"></div>
 
-    <p id="status-message">Fetching recipes from A–Z...</p>
+<div id="app"></div>
 
-    <div id="app"></div>
-
-    <script src="script.js"></script>
-
+<script src="script.js"></script>
 </body>
 </html>
