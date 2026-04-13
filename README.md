@@ -6,6 +6,14 @@ Search and explore recipes from around the world.
 
 A web application that lets users search, filter, sort, and save their favourite recipes using real-time data from TheMealDB API. Built with vanilla HTML, CSS, and JavaScript — focused on clean code, API integration, and DOM manipulation.
 
+## Note on Commit Timing
+
+I realized after completing some changes that I had forgotten to commit them earlier.<br>
+
+While reviewing the project, I also noticed a small issue in data fetching and UI rendering, which I fixed and included in a later commit.<br>
+
+Apologies for the delayed commit. You can check the previous commits to see the original development flow and milestone-wise progress.
+
 ## Features
 
 - **Search** — Find recipes by name in real time
